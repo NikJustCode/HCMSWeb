@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Мои Сотрудники')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Персонал', '/franchisee/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="employees-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title">Управление персоналом</h1>
+                <a href="/franchisee/employees/new" class="button button--primary">Добавить сотрудника</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Контакты</th>
+                            <th>График работы</th>
+                            <th>Объекты</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="emp : ${employees}">
+                            <td class="cell-bold">
+                                <div class="employee-name-cell">
+                                    <span th:text="${emp.fullName}">Иванов Иван</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="employee-contacts">
+                                    <div class="contact-item">
+                                        <span class="contact-icon">📞</span>
+                                        <span th:text="${emp.phone}">+7 900 000-00-00</span>
+                                    </div>
+                                    <div class="contact-item" th:if="${emp.email != null and !emp.email.isEmpty()}">
+                                        <span class="contact-icon">📧</span>
+                                        <span th:text="${emp.email}">ivanov@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="schedule-info">
+                                    <span th:if="${emp.scheduleType}" th:text="${emp.scheduleType.displayName}"
+                                        class="status-badge status-badge--new">По дням</span>
+                                    <div class="schedule-details mt-1">
+                                        <!-- Weekly days display -->
+                                        <div th:if="${emp.scheduleType == T(ru.mokrischev.vendingsupply.model.enums.ScheduleType).WEEKLY_DAYS}"
+                                            class="days-chips">
+                                            <span th:each="day : ${emp.workingDays}" class="day-chip"
+                                                th:text="${day == T(java.time.DayOfWeek).MONDAY ? 'Пн' : 
+                                                            day == T(java.time.DayOfWeek).TUESDAY ? 'Вт' : 
+                                                            day == T(java.time.DayOfWeek).WEDNESDAY ? 'Ср' : 
+                                                            day == T(java.time.DayOfWeek).THURSDAY ? 'Чт' : 
+                                                            day == T(java.time.DayOfWeek).FRIDAY ? 'Пт' : 
+                                                            day == T(java.time.DayOfWeek).SATURDAY ? 'Сб' : 'Вс'}">Пн</span>
+                                        </div>
+                                        <!-- Shift pattern display -->
+                                        <span
+                                            th:if="${emp.scheduleType == T(ru.mokrischev.vendingsupply.model.enums.ScheduleType).SHIFT_PATTERN}"
+                                            th:text="'Схема: ' + ${emp.shiftPattern}" class="schedule-text">2/2</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="machines-count" th:if="${emp.machines != null and !emp.machines.isEmpty()}">
+                                    <span class="badge bg-secondary" th:text="${emp.machines.size() + ' авт.'}">3
+                                        авт.</span>
+                                    <div class="machines-list-mini">
+                                        <small th:each="m, iter : ${emp.machines}"
+                                            th:text="${m.name} + ${!iter.last ? ', ' : ''}"></small>
+                                    </div>
+                                </div>
+                                <span th:if="${emp.machines == null or emp.machines.isEmpty()}" class="no-data-text">Не
+                                    назначены</span>
+                            </td>
+                            <td>
+                                <div class="table-actions-group">
+                                    <a th:href="@{/franchisee/employees/edit/{id}(id=${emp.id})}"
+                                        class="button button--small button--warning">Ред.</a>
+                                    <form th:action="@{/franchisee/employees/delete/{id}(id=${emp.id})}" method="post"
+                                        class="inline-form">
+                                        <button type="submit" class="button button--small button--danger"
+                                            onclick="return confirm('Удалить сотрудника?');">Удал.</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${employees == null or employees.isEmpty()}" class="empty-state">
+                <p>У вас пока нет добавленных сотрудников</p>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

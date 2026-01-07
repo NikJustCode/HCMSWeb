@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Новый заказ')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Новый заказ', '/franchisee/orders')}"></header>
+
+    <main class="page-content">
+        <section class="franchisee-new-order-section content-card">
+            <h1 class="section-title">Оформление заказа</h1>
+
+            <div th:if="${param.error}" class="notification notification--danger order-error-message">
+                Ошибка оформления заказа.
+            </div>
+
+            <form th:action="@{/franchisee/orders/create}" method="post" class="order-form">
+                <table class="admin-table order-products-table">
+                    <thead>
+                        <tr>
+                            <th class="cell-image"></th>
+                            <th>Товар</th>
+                            <th>Цена</th>
+                            <th>Ед. изм.</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <td class="cell-centered cell-image">
+                                <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}"
+                                    th:src="${product.imageUrl}" class="product-thumbnail" alt="Product">
+                                <span th:if="${product.imageUrl == null or product.imageUrl.isEmpty()}"
+                                    class="no-image-text">Нет фото</span>
+                            </td>
+                            <td>
+                                <strong th:text="${product.name}">Кофе</strong>
+                                <br>
+                                <small th:text="${product.description}"
+                                    class="product-description-text">Описание</small>
+                            </td>
+                            <td th:text="${product.price}">1000</td>
+                            <td th:text="${product.unit}">кг</td>
+                            <td>
+                                <input type="number" th:name="'quantity_' + ${product.id}"
+                                    class="form-field__input quantity-input" value="0" min="0">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="order-form-actions">
+                    <button type="submit" class="button button--primary order-submit-button">Оформить заказ</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Сотрудник')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Сотрудник', '/franchisee/employees')}"></header>
+
+    <main class="page-content">
+        <section class="employee-form-section content-card">
+            <h1 class="section-title" th:text="${employee.id == null ? 'Новый сотрудник' : 'Редактировать сотрудника'}">
+                Сотрудник</h1>
+
+            <div class="form-container employee-form-container">
+                <form th:action="@{/franchisee/employees/save}" method="post" th:object="${employee}"
+                    class="employee-form">
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="form-field">
+                        <label class="form-field__label">ФИО</label>
+                        <input type="text" class="form-field__input" th:field="*{fullName}" required
+                            placeholder="Иванов Иван Иванович">
+                        <span class="form-field__error" th:if="${#fields.hasErrors('fullName')}"
+                            th:errors="*{fullName}"></span>
+                    </div>
+
+                    <div class="form-row-multi">
+                        <div class="form-field form-field--half">
+                            <label class="form-field__label">Телефон</label>
+                            <input type="text" class="form-field__input" th:field="*{phone}" required
+                                placeholder="+7...">
+                            <span class="form-field__error" th:if="${#fields.hasErrors('phone')}"
+                                th:errors="*{phone}"></span>
+                        </div>
+                        <div class="form-field form-field--half">
+                            <label class="form-field__label">Email (необязательно)</label>
+                            <input type="email" class="form-field__input" th:field="*{email}"
+                                placeholder="employee@example.com">
+                            <span class="form-field__error" th:if="${#fields.hasErrors('email')}"
+                                th:errors="*{email}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-field__label">График работы</label>
+                        <div class="schedule-type-selector">
+                            <label class="checkbox-btn">
+                                <input type="radio" th:field="*{scheduleType}" value="WEEKLY_DAYS"
+                                    onclick="toggleSchedule('WEEKLY_DAYS')">
+                                <span class="checkbox-btn-label">По дням недели</span>
+                            </label>
+                            <label class="checkbox-btn">
+                                <input type="radio" th:field="*{scheduleType}" value="SHIFT_PATTERN"
+                                    onclick="toggleSchedule('SHIFT_PATTERN')">
+                                <span class="checkbox-btn-label">Сменный график</span>
+                            </label>
+                        </div>
+                        <span class="form-field__error" th:if="${#fields.hasErrors('scheduleType')}"
+                            th:errors="*{scheduleType}"></span>
+
+                        <div id="daysSchedule" class="schedule-days-group mt-3"
+                            th:classappend="${employee.scheduleType != T(ru.mokrischev.vendingsupply.model.enums.ScheduleType).WEEKLY_DAYS} ? 'statistics-hidden' : ''">
+                            <label class="form-field__label">Выберите рабочие дни:</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-btn" th:each="dayWrapper : ${daysList}">
+                                    <input type="checkbox" th:field="*{workingDays}" th:value="${dayWrapper.day}">
+                                    <span class="checkbox-btn-label" th:text="${dayWrapper.label}">Пн</span>
+                                </label>
+                            </div>
+                            <span class="form-field__error" th:if="${#fields.hasErrors('workingDays')}"
+                                th:errors="*{workingDays}"></span>
+                        </div>
+
+                        <div id="shiftSchedule" class="schedule-shift-group mt-3"
+                            th:classappend="${employee.scheduleType != T(ru.mokrischev.vendingsupply.model.enums.ScheduleType).SHIFT_PATTERN} ? 'statistics-hidden' : ''">
+                            <label class="form-field__label">Схема смен (например: 2/2):</label>
+                            <input type="text" th:field="*{shiftPattern}" class="form-field__input"
+                                placeholder="Например: 2/2, 3/1" />
+                            <span class="form-field__error" th:if="${#fields.hasErrors('shiftPattern')}"
+                                th:errors="*{shiftPattern}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-field__label">Обслуживаемые автоматы</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-btn" th:each="machine : ${machines}">
+                                <input type="checkbox" name="machineIds" th:value="${machine.id}"
+                                    th:checked="${employee.machines != null and employee.machines.contains(machine)}">
+                                <span class="checkbox-btn-label" th:text="${machine.name}">Machine</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button button--success button--full-width mt-4">Сохранить</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script th:inline="javascript">
+        function toggleSchedule(type) {
+            document.getElementById('daysSchedule').classList.toggle('statistics-hidden', type !== 'WEEKLY_DAYS');
+            document.getElementById('shiftSchedule').classList.toggle('statistics-hidden', type !== 'SHIFT_PATTERN');
+        }
+
+        // Initialize state if not set
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkedRadio = document.querySelector('input[name="scheduleType"]:checked');
+            if (checkedRadio) {
+                toggleSchedule(checkedRadio.value);
+            } else {
+                // Default to WEEKLY_DAYS if nothing is checked
+                const defaultRadio = document.querySelector('input[name="scheduleType"][value="WEEKLY_DAYS"]');
+                if (defaultRadio) {
+                    defaultRadio.checked = true;
+                    toggleSchedule('WEEKLY_DAYS');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

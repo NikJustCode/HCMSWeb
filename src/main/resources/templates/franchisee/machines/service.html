@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Обслуживание автомата')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Обслуживание', '/franchisee/machines')}"></header>
+
+    <main class="page-content">
+        <section class="machine-service-section content-card">
+            <h1 class="section-title">Обслуживание автомата</h1>
+            <p class="machine-info-text"><strong>Автомат:</strong> <span th:text="${machine.name}">Name</span></p>
+
+            <div class="info-card form-container machine-service-form-container">
+                <form th:action="@{/franchisee/machines/{id}/service(id=${machine.id})}" method="post"
+                    th:object="${serviceForm}" class="machine-service-form">
+
+                    <div th:if="${error_message}" class="notification notification--danger service-error-message"
+                        th:text="${error_message}"></div>
+
+                    <table class="admin-table service-items-table">
+                        <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>На складе</th>
+                                <th>Загрузить (кол-во)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item, stat : ${warehouseItems}">
+                                <td th:text="${item.product.name}">Кофе</td>
+                                <td th:text="${item.quantity} + ' ' + ${item.product.unit}">10 кг</td>
+                                <td>
+                                    <input type="hidden" th:name="|items[${stat.index}].productId|"
+                                        th:value="${item.product.id}" />
+                                    <input type="number" th:name="|items[${stat.index}].amount|"
+                                        class="form-field__input quantity-input" min="0" th:max="${item.quantity}"
+                                        placeholder="0">
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(warehouseItems)}">
+                                <td colspan="3" class="table-empty-message">Склад пуст</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="notification notification--warning service-warning-message">
+                        Внимание: Товары будут списаны со склада.
+                    </div>
+
+                    <button type="submit"
+                        class="button button--success button--full-width service-submit-button">Выполнить
+                        обслуживание</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

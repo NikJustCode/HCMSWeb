@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Списание товара')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Списание товара', '/franchisee/warehouse')}"></header>
+
+    <main class="page-content">
+        <section class="warehouse-outcome-section content-card">
+            <h1 class="section-title">Списание товара</h1>
+
+            <div class="info-card form-container warehouse-form-container">
+                <form th:action="@{/franchisee/warehouse/outcome}" method="post" class="warehouse-outcome-form">
+                    <div class="form-field">
+                        <label class="form-field__label">Товар</label>
+                        <select name="productId" class="form-select" required>
+                            <option th:each="item : ${warehouseItems}" th:value="${item.product.id}"
+                                th:text="${item.product.name} + ' (Доступно: ' + ${item.quantity} + ')'"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-field__label">Количество</label>
+                        <input type="number" name="quantity" class="form-field__input" min="1" required>
+                    </div>
+
+                    <button type="submit"
+                        class="button button--danger button--full-width warehouse-outcome-submit">Списать</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

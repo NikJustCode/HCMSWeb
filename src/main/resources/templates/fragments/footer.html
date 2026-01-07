@@ -1,0 +1,31 @@
+<footer class="site-footer" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="footer">
+    <div class="site-footer__content">
+        <div class="site-footer__grid">
+            <div class="footer-section">
+                <h4 class="footer-section__title">History Coffee</h4>
+                <p>Премиальное качество кофе и надежное партнерство. Мы создаем будущее вендингового бизнеса.</p>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-section__title">Навигация</h4>
+                <nav class="footer-navigation">
+                    <a href="/" class="footer-section__link">Главная</a>
+                    <a href="/contacts" class="footer-section__link">Контакты</a>
+                    <div sec:authorize="isAnonymous()">
+                        <a href="/login" class="footer-section__link">Вход для партнеров</a>
+                    </div>
+                </nav>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-section__title">Контакты</h4>
+                <div class="footer-contacts">
+                    <a href="tel:+74959999999" class="footer-section__link">+7 (495) 999-99-99</a>
+                    <a href="mailto:info@historycoffee.ru" class="footer-section__link">info@historycoffee.ru</a>
+                </div>
+            </div>
+        </div>
+        <div class="site-footer__copyright">
+            &copy; 2025 History Coffee.
+        </div>
+    </div>
+</footer>

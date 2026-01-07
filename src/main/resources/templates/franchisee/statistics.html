@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Статистика')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Статистика', '/franchisee/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="statistics-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title">Расширенная Статистика</h1>
+                <a href="/franchisee/dashboard" class="button button--secondary">Назад</a>
+            </div>
+
+            <!-- Expenses Calculator -->
+            <div class="info-card statistics-expenses-card">
+                <h3 class="statistics-card-title">Финансовый отчет (Расходы)</h3>
+                <form action="/franchisee/statistics" method="get" class="statistics-filter-form">
+                    <div class="form-field statistics-date-field">
+                        <label class="form-field__label">С:</label>
+                        <input type="date" name="startDate" th:value="${calcStartDate}" class="form-field__input"
+                            required>
+                    </div>
+                    <div class="form-field statistics-date-field">
+                        <label class="form-field__label">По:</label>
+                        <input type="date" name="endDate" th:value="${calcEndDate}" class="form-field__input" required>
+                    </div>
+                    <button type="submit" class="button button--primary statistics-submit-button">Рассчитать</button>
+                </form>
+                <div th:if="${calcStartDate != null}" class="notification notification--info statistics-result">
+                    За период с <strong th:text="${calcStartDate}"></strong> по <strong
+                        th:text="${calcEndDate}"></strong>
+                    потрачено: <strong th:text="${expenses} + ' ₽'"></strong>
+                </div>
+            </div>
+
+            <!-- Consumption Chart -->
+            <div class="info-card statistics-chart-card">
+                <h3 class="statistics-card-title">Расход товаров по автоматам</h3>
+                <!-- Filter Form -->
+                <form th:action="@{/franchisee/statistics}" method="get" class="statistics-chart-filter-form">
+                    <div class="form-field statistics-filter-group">
+                        <label class="form-field__label">Тип периода</label>
+                        <select name="periodType" id="periodTypeSelect" class="form-select"
+                            onchange="togglePeriodInputs()">
+                            <option value="day" th:selected="${periodType == 'day'}">День</option>
+                            <option value="month" th:selected="${periodType == 'month'}">Месяц</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field statistics-filter-group" id="dayInputGroup">
+                        <label class="form-field__label">Выберите день</label>
+                        <input type="date" name="date" class="form-field__input" th:value="${selectedDate}">
+                    </div>
+
+                    <div class="form-field statistics-filter-group statistics-hidden" id="monthInputGroup">
+                        <label class="form-field__label">Выберите месяц</label>
+                        <input type="month" name="month" class="form-field__input" th:value="${selectedMonth}">
+                    </div>
+
+                    <div class="form-field statistics-filter-group">
+                        <button type="submit"
+                            class="button button--primary statistics-chart-filter-submit">Показать</button>
+                    </div>
+                </form>
+
+                <div class="chart-container">
+                    <canvas id="consumptionChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const consumptionData = /*[[${consumptionData}]]*/ {};
+        const periodLabel = /*[[${periodLabel}]]*/ 'Период';
+        /*]]>*/
+
+        // Prepare Data for Chart
+        const labels = Object.keys(consumptionData);
+        const machineNames = new Set();
+
+        // Collect all machine names first
+        labels.forEach(product => {
+            Object.keys(consumptionData[product]).forEach(machine => machineNames.add(machine));
+        });
+
+        const datasets = Array.from(machineNames).map((machine, index) => {
+            // Branded Palette containing Gold, Coffee, Latte variants
+            const colors = ['#2C1A1D', '#D4A017', '#4A3B3E', '#F5E6CA', '#8D6E63', '#6D4C41', '#3E2723'];
+            const color = colors[index % colors.length];
+
+            return {
+                label: machine,
+                data: labels.map(product => consumptionData[product][machine] || 0),
+                backgroundColor: color,
+                borderColor: color,
+                borderWidth: 1
+            };
+        });
+
+        // Render Chart
+        const ctx = document.getElementById('consumptionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Расход товаров (' + periodLabel + ')',
+                        font: {
+                            family: "'Playfair Display', serif",
+                            size: 20
+                        },
+                        color: '#2C1A1D',
+                        padding: 20
+                    },
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: { family: "'Inter', sans-serif" },
+                            color: '#2D2D2D'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#E0E0E0' },
+                        ticks: { font: { family: "'Inter', sans-serif" } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: "'Inter', sans-serif" } }
+                    }
+                }
+            }
+        });
+
+        function togglePeriodInputs() {
+            const type = document.getElementById('periodTypeSelect').value;
+            document.getElementById('dayInputGroup').classList.toggle('statistics-hidden', type !== 'day');
+            document.getElementById('monthInputGroup').classList.toggle('statistics-hidden', type !== 'month');
+        }
+
+        // Init state
+        togglePeriodInputs();
+    </script>
+</body>
+
+</html>

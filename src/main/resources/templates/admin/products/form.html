@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Товар')}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/cabinet-header :: header(title='Товар', backUrl='/admin/products')}"></div>
+
+    <main class="page-content">
+        <section class="product-form-section content-card">
+            <h2 class="section-title" th:text="${product.id != null ? 'Редактирование товара' : 'Новый товар'}">Товар
+            </h2>
+
+            <form th:action="@{/admin/products/save}" th:object="${product}" method="post" enctype="multipart/form-data"
+                class="product-form form-container">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-field">
+                    <label for="name" class="form-field__label">Название</label>
+                    <input type="text" id="name" th:field="*{name}" class="form-field__input" required
+                        placeholder="Введите название товара">
+                    <span class="form-field__error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+
+                <div class="form-field">
+                    <label for="description" class="form-field__label">Описание</label>
+                    <textarea id="description" th:field="*{description}" class="form-field__textarea"
+                        placeholder="Описание товара"></textarea>
+                </div>
+
+                <!-- ИЗМЕНЕНИЕ 1: Обертка для двух полей в одну строку -->
+                <div class="form-row-multi">
+                    <div class="form-field form-field--half">
+                        <label for="price" class="form-field__label">Цена (₽)</label>
+                        <input type="number" id="price" th:field="*{price}" class="form-field__input" required min="0"
+                            step="0.01" placeholder="0.00">
+                        <span class="form-field__error" th:if="${#fields.hasErrors('price')}"
+                            th:errors="*{price}"></span>
+                    </div>
+
+                    <div class="form-field form-field--half">
+                        <label for="unit" class="form-field__label">Единица измерения</label>
+                        <input type="text" id="unit" th:field="*{unit}" class="form-field__input"
+                            placeholder="шт, кг, л и т.д.">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-field__label">Изображение</label>
+
+                    <div class="image-upload-options">
+                        <!-- Блок загрузки нового -->
+                        <div class="form-field">
+                            <label for="file" class="form-field__label form-field__label--small">Загрузить новое</label>
+                            <input type="file" id="file" name="file" class="form-field__input" accept="image/*">
+                        </div>
+
+                        <!-- ИЗМЕНЕНИЕ 2: Визуальный выбор вместо Select -->
+                        <div class="form-field" th:if="${existingImages != null and !existingImages.isEmpty()}">
+                            <label class="form-field__label form-field__label--small">Или выбрать из галереи:</label>
+
+                            <div class="image-selection-grid">
+                                <!-- Мы перебираем images так же, как в select, но выводим картинки -->
+                                <label th:each="img : ${existingImages}" class="image-option-card">
+                                    <!-- Радио-кнопка скрыта, но хранит значение для отправки на сервер -->
+                                    <input type="radio" name="selectedImage" th:value="${img}"
+                                        th:checked="${product.imageUrl != null and product.imageUrl.contains(img)}">
+
+                                    <div class="image-option-preview">
+                                        <!-- Используем прямую подстановку пути, как в списке товаров -->
+                                        <img th:src="${'/uploads/' + img}" alt="Image" loading="lazy">
+                                    </div>
+                                    <!-- Выводим имя файла мелко снизу -->
+                                    <span class="image-option-name" th:text="${img}">filename</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${product.imageUrl != null}" class="current-image">
+                        <p class="image-preview-label">Текущее изображение:</p>
+                        <img th:src="${product.imageUrl}" alt="Текущее изображение" class="image-preview">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="button button--primary">Сохранить</button>
+                    <a th:href="@{/admin/products}" class="button button--secondary">Отмена</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

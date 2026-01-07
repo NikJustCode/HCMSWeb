@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Автомат')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Автомат', '/franchisee/machines')}"></header>
+
+    <main class="page-content">
+        <section class="machine-form-section content-card">
+            <h1 class="section-title"
+                th:text="${machine.id == null ? 'Добавление автомата' : 'Редактирование автомата'}">Автомат</h1>
+
+            <div class="info-card form-container machine-form-container">
+                <form th:action="@{/franchisee/machines/save}" method="post" th:object="${machine}"
+                    class="machine-form">
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="form-field">
+                        <label class="form-field__label">Название</label>
+                        <input type="text" th:field="*{name}" class="form-field__input" required
+                            placeholder="Например: Автомат в ТЦ Лето">
+                        <div class="form-field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name
+                            Error
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-field__label">Адрес</label>
+                        <input type="text" th:field="*{addressText}" class="form-field__input" required
+                            placeholder="Улица, дом...">
+                        <div class="form-field-error" th:if="${#fields.hasErrors('addressText')}"
+                            th:errors="*{addressText}">
+                            Address Error</div>
+                    </div>
+
+                    <button type="submit"
+                        class="button button--success button--full-width machine-form-submit">Сохранить</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

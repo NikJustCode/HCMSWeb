@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Детали автомата')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Детали автомата', '/franchisee/machines')}"></header>
+
+    <main class="page-content">
+        <section class="machine-details-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title"><span th:text="${machine.name}">Автомат</span></h1>
+                <a th:href="@{/franchisee/machines/{id}/service(id=${machine.id})}"
+                    class="button button--primary machine-service-button">Обслужить</a>
+            </div>
+
+            <p class="machine-address-text"><strong>Адрес:</strong> <span th:text="${machine.addressText}">Адрес</span>
+            </p>
+
+            <div class="info-card machine-history-card">
+                <h3 class="card-title">История обслуживания</h3>
+                <table class="admin-table machine-history-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Товар</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="move : ${history}">
+                            <td th:text="${#temporals.format(move.operationDate, 'dd-MM-yyyy HH:mm')}">Date</td>
+                            <td th:text="${move.product.name}">Product</td>
+                            <td th:text="${move.amount}">-10</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(history)}">
+                            <td colspan="3" class="table-empty-message">История пуста</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

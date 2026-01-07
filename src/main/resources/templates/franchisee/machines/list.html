@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Мои автоматы')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Автоматы', '/franchisee/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="franchisee-machines-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title">Мои Торговые Автоматы</h1>
+                <a href="/franchisee/machines/new" class="button button--primary machines-add-button">Добавить
+                    автомат</a>
+            </div>
+
+            <table class="admin-table machines-table">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Адрес</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="machine : ${machines}">
+                        <td>
+                            <a th:href="@{/franchisee/machines/{id}(id=${machine.id})}" th:text="${machine.name}"
+                                class="link-highlight machine-link">Автомат 1</a>
+                        </td>
+                        <td th:text="${machine.addressText}">Ул. Ленина, 1</td>
+                        <td>
+                            <div class="table-actions-group">
+                                <a th:href="@{/franchisee/machines/{id}/service(id=${machine.id})}"
+                                    class="button button--small button--info machine-service-button">Обслужить</a>
+                                <a th:href="@{/franchisee/machines/edit/{id}(id=${machine.id})}"
+                                    class="button button--small button--warning machine-edit-button">Редактировать</a>
+                                <form th:action="@{/franchisee/machines/delete/{id}(id=${machine.id})}" method="post"
+                                    class="inline-form">
+                                    <button type="submit"
+                                        class="button button--small button--danger machine-delete-button"
+                                        onclick="return confirm('Вы уверены?');">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Статистика')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Статистика', '/admin/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="admin-statistics-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title">Статистика продаж</h1>
+                <a href="/admin/dashboard" class="button button--secondary">Назад</a>
+            </div>
+
+            <div class="statistics-charts-grid">
+                <div class="info-card chart-card chart-card--revenue">
+                    <h3 class="chart-card-title">Выручка по месяцам</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="info-card chart-card chart-card--products">
+                    <h3 class="chart-card-title">Топ-5 Товаров</h3>
+                    <div class="chart-container chart-container--centered">
+                        <canvas id="productsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const revenueData = /*[[${monthlyRevenue}]]*/ {};
+        const productData = /*[[${topProducts}]]*/ {};
+
+        // Revenue Chart
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(revenueData),
+                datasets: [{
+                    label: 'Выручка (₽)',
+                    data: Object.values(revenueData),
+                    backgroundColor: '#4CAF50'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Products Chart
+        new Chart(document.getElementById('productsChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(productData),
+                datasets: [{
+                    label: 'Продано (шт)',
+                    data: Object.values(productData),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+        /*]]>*/
+    </script>
+</body>
+
+</html>

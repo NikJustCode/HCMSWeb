@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Все заказы')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Заказы', '/admin/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="admin-orders-section content-card">
+            <h1 class="section-title admin-page-title">Все заказы</h1>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Франчайзи</th>
+                        <th>Дата</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.id}">1</td>
+                        <td>
+                            <a th:href="@{/admin/franchisee/{id}(id=${order.franchisee.id})}"
+                                th:text="${order.franchisee.email}" class="link-highlight">user@mail.ru</a>
+                        </td>
+                        <td th:text="${#temporals.format(order.createdAt, 'dd-MM-yyyy HH:mm')}">Date</td>
+                        <td th:text="${order.totalPrice} + ' ₽'">1000 ₽</td>
+                        <td>
+                            <span
+                                th:class="'status-badge ' +
+                                (${order.status.name() == 'NEW'} ? 'status-badge--new' :
+                                (${order.status.name() == 'PROCESSING'} ? 'status-badge--processing' :
+                                (${order.status.name() == 'SHIPPED'} ? 'status-badge--shipped' :
+                                (${order.status.name() == 'DELIVERED'} ? 'status-badge--delivered' : 'status-badge--archived'))))"
+                                th:text="${order.status.displayName}">Status</span>
+                        </td>
+                        <td>
+                            <div class="table-actions-group">
+                                <a th:href="@{/admin/orders/{id}(id=${order.id})}"
+                                    class="button button--small button--info">Подробнее</a>
+                                <form th:action="@{/admin/orders/update}" method="post" class="status-update-form">
+                                    <input type="hidden" name="orderId" th:value="${order.id}" />
+                                    <select name="status" class="form-select status-select-small">
+                                        <option th:each="status : ${statuses}" th:value="${status}"
+                                            th:text="${status.displayName}" th:selected="${status == order.status}">
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="button button--small button--primary">OK</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

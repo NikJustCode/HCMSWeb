@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Заявки')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Заявки', '/admin/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="admin-feedback-section content-card">
+            <h1 class="section-title">Заявки с сайта</h1>
+
+            <table class="admin-table feedback-table">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Имя</th>
+                        <th>Контакты</th>
+                        <th>Сообщение</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="feedback : ${feedbacks}" th:classappend="${!feedback.read} ? 'table-row--unread' : ''">
+                        <td th:text="${#temporals.format(feedback.createdAt, 'dd.MM.yyyy HH:mm')}">28.12.2025</td>
+                        <td th:text="${feedback.name}">Иван</td>
+                        <td th:text="${feedback.contactInfo}">+7999...</td>
+                        <td th:text="${feedback.message}">Хочу франшизу</td>
+                        <td>
+                            <span th:if="${!feedback.read}" class="status-badge status-badge--shipped">Новое</span>
+                            <span th:if="${feedback.read}" class="status-badge status-badge--archived">Прочитано</span>
+                        </td>
+                        <td>
+                            <div class="table-actions-group">
+                                <form th:if="${!feedback.read}"
+                                    th:action="@{/admin/feedback/mark-read/{id}(id=${feedback.id})}" method="post"
+                                    class="inline-form">
+                                    <button type="submit"
+                                        class="button button--small button--primary feedback-mark-read-button">Прочитано</button>
+                                </form>
+                                <form th:action="@{/admin/feedback/delete/{id}(id=${feedback.id})}" method="post"
+                                    class="inline-form">
+                                    <button type="submit"
+                                        class="button button--small button--danger feedback-delete-button"
+                                        onclick="return confirm('Удалить заявку?')">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${feedbacks.isEmpty()}">
+                        <td colspan="6" class="table-empty-message">Заявок пока нет.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

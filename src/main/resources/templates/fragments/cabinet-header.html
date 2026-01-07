@@ -1,0 +1,14 @@
+<header class="cabinet-header" xmlns:th="http://www.thymeleaf.org" th:fragment="header(title, backUrl)">
+    <div class="cabinet-header__container">
+        <a th:href="${backUrl}" class="cabinet-header__back">
+            <span class="cabinet-header__back-icon">←</span>
+            <span>Назад</span>
+        </a>
+        <h1 class="cabinet-header__title" th:text="${title}">Заголовок</h1>
+        <div class="cabinet-header__actions">
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button class="button button--cabinet">Выход</button>
+            </form>
+        </div>
+    </div>
+</header>

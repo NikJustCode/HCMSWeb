@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Детали заказа')}">
+</head>
+
+<body>
+    <div
+        th:replace="~{fragments/cabinet-header :: header(title='Заказ #' + ${order.id}, backUrl='javascript:history.back()')}">
+    </div>
+
+    <main class="page-content">
+        <!-- Основная информация о заказе -->
+        <section class="order-info-section content-card mb-4">
+            <h2 class="section-title">Основная информация</h2>
+            <div class="order-details-grid">
+                <div class="order-detail">
+                    <span class="order-detail__label">Дата создания:</span>
+                    <span class="order-detail__value"
+                        th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2025 12:00</span>
+                </div>
+                <div class="order-detail">
+                    <span class="order-detail__label">Статус:</span>
+                    <span th:class="'status-badge status-badge--' + ${order.status.name().toLowerCase()}"
+                        th:text="${order.status.displayName}">Новый</span>
+                </div>
+                <div class="order-detail">
+                    <span class="order-detail__label">Итоговая сумма:</span>
+                    <span class="order-detail__value order-detail__value--price"
+                        th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'WHITESPACE', 2, 'POINT')} + ' ₽'">1
+                        000.00 ₽</span>
+                </div>
+                <div class="order-detail" th:if="${order.franchisee}">
+                    <span class="order-detail__label">Партнер:</span>
+                    <span class="order-detail__value" th:text="${order.franchisee.email}">partner@example.com</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Состав заказа -->
+        <section class="order-items-section content-card mb-4">
+            <h2 class="section-title">Состав заказа</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Итого</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.product.name}">Кофе в зернах</td>
+                        <td th:text="${#numbers.formatDecimal(item.priceAtMoment, 1, 'WHITESPACE', 2, 'POINT')} + ' ₽'">
+                            100.00 ₽</td>
+                        <td th:text="${item.quantity + ' ' + (item.product.unit ?: 'шт.')}">2 кг</td>
+                        <td
+                            th:text="${#numbers.formatDecimal(item.priceAtMoment * item.quantity, 1, 'WHITESPACE', 2, 'POINT')} + ' ₽'">
+                            200.00 ₽</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- История изменений -->
+        <section class="order-history-section content-card">
+            <h2 class="section-title">История изменений статуса</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Дата и время</th>
+                        <th>Статус</th>
+                        <th>Исполнитель</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="log : ${history}">
+                        <td th:text="${#temporals.format(log.changedAt, 'dd.MM.yyyy HH:mm')}">01.01.2025 14:00</td>
+                        <td>
+                            <span th:class="'status-badge status-badge--' + ${log.status.name().toLowerCase()}"
+                                th:text="${log.status.displayName}">Обработка</span>
+                        </td>
+                        <td th:text="${log.changedBy}">Система</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

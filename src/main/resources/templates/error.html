@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Ошибка')}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="page-content">
+        <section class="error-page content-card">
+            <div class="error-content">
+                <h1 class="error-code" th:text="${status}">500</h1>
+                <h2 class="error-title" th:text="${error ?: 'Что-то пошло не так'}">Ошибка</h2>
+                <p class="error-message"
+                    th:text="${message ?: 'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.'}">
+                    Описание ошибки
+                </p>
+                <p class="error-path" th:if="${path}">
+                    Путь: <code th:text="${path}"></code>
+                </p>
+                <div class="error-actions">
+                    <a href="javascript:history.back()" class="button button--secondary">← Назад</a>
+                    <a href="/" class="button button--primary">На главную</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

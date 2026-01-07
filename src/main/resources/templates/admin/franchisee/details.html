@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Детали Франчайзи')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Детали Франчайзи', '/admin/franchisee')}"></header>
+
+    <main class="page-content">
+        <section class="franchisee-details-section content-card">
+            <h1 class="section-title">Детали Франчайзи</h1>
+
+            <div class="info-card franchisee-info-card">
+                <h3 th:text="${franchisee.email}">user@example.com</h3>
+                <p><strong>ФИО:</strong> <span th:text="${franchisee.fullName}">Name</span></p>
+                <p><strong>Телефон:</strong> <span th:text="${franchisee.phoneNumber}">Phone</span></p>
+            </div>
+
+            <div class="franchisee-details-grid">
+                <div class="franchisee-details-column">
+                    <h3 class="column-title">Склад</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${warehouseItems}">
+                                <td th:text="${item.product.name}">Product</td>
+                                <td th:text="${item.quantity}">0</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(warehouseItems)}">
+                                <td colspan="2" class="table-empty-message">Склад пуст</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="franchisee-details-column">
+                    <h3 class="column-title">Автоматы</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Адрес</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="machine : ${machines}">
+                                <td th:text="${machine.name}">Machine</td>
+                                <td th:text="${machine.addressText}">Address</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(machines)}">
+                                <td colspan="2" class="table-empty-message">Нет автоматов</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+<header class="cabinet-header" xmlns:th="http://www.thymeleaf.org" th:fragment="header(title)">
+    <div class="cabinet-header__container">
+        <a href="/" class="cabinet-header__logo">History Coffee</a>
+        <h1 class="cabinet-header__title" th:text="${title}">Кабинет</h1>
+        <div class="cabinet-header__actions">
+            <a href="/" class="button button--cabinet">На главную</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button class="button button--cabinet">Выход</button>
+            </form>
+        </div>
+    </div>
+</header>

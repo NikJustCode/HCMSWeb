@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Мои заказы')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Заказы', '/franchisee/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="franchisee-orders-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title">История заказов</h1>
+                <a href="/franchisee/orders/new" class="button button--primary orders-new-button">Новый заказ</a>
+            </div>
+
+            <table class="admin-table orders-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Дата</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.id}">1</td>
+                        <td th:text="${#temporals.format(order.createdAt, 'dd-MM-yyyy HH:mm')}">Date</td>
+                        <td th:text="${order.totalPrice}">5000</td>
+                        <td>
+                            <span
+                                th:class="'status-badge ' +
+                        (${order.status.name() == 'NEW'} ? 'status-badge--new' :
+                        (${order.status.name() == 'PROCESSING'} ? 'status-badge--processing' :
+                        (${order.status.name() == 'SHIPPED'} ? 'status-badge--shipped' :
+                        (${order.status.name() == 'DELIVERED'} ? 'status-badge--delivered' : 'status-badge--archived'))))"
+                                th:text="${order.status.displayName}">Новый</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/franchisee/orders/{id}(id=${order.id})}"
+                                class="button button--small button--info">Подробнее</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

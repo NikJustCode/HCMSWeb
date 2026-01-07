@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Панель Администратора')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-dashboard-header :: header('Панель управления')}"></header>
+
+    <main class="page-content">
+        <section class="dashboard-overview">
+            <div class="dashboard-widgets-grid">
+                <!-- Orders Card -->
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Заказы</h3>
+                    <p class="dashboard-widget__desc">Управление заказами франчайзи.</p>
+                    <a href="/admin/orders" class="button button--primary button--full-width">Перейти к заказам</a>
+                </article>
+
+                <!-- Warehouse/Products Card -->
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Товары</h3>
+                    <p class="dashboard-widget__desc">Управление каталогом товаров.</p>
+                    <a href="/admin/products" class="button button--primary button--full-width">Управление товарами</a>
+                </article>
+
+                <!-- Franchisees Card -->
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Франчайзи</h3>
+                    <p class="dashboard-widget__desc">Просмотр списка партнеров и их статистики.</p>
+                    <a href="/admin/franchisee" class="button button--primary button--full-width">Список партнеров</a>
+                </article>
+
+                <!-- Feedback Card -->
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Заявки</h3>
+                    <p class="dashboard-widget__desc">Заявки с формы обратной связи.</p>
+                    <a href="/admin/feedback" class="button button--warning button--full-width">Просмотр заявок</a>
+                </article>
+
+                <!-- Statistics Card -->
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Статистика</h3>
+                    <p class="dashboard-widget__desc">Общая аналитика продаж и товаров.</p>
+                    <a href="/admin/statistics" class="button button--accent button--full-width">Смотреть отчеты</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

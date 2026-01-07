@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Список Франчайзи')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Франчайзи', '/admin/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="admin-franchisee-section content-card">
+            <h1 class="section-title">Список Франчайзи</h1>
+
+            <table class="admin-table franchisee-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ФИО</th>
+                        <th>Email</th>
+                        <th>Телефон</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${franchisees}">
+                        <td th:text="${user.id}">1</td>
+                        <td th:text="${user.fullName}">Иван Иванов</td>
+                        <td th:text="${user.email}">user@example.com</td>
+                        <td th:text="${user.phoneNumber}">+7900...</td>
+                        <td>
+                            <a th:href="@{/admin/franchisee/{id}(id=${user.id})}"
+                                class="button button--small button--info">Подробнее</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(franchisees)}">
+                        <td colspan="5" class="table-empty-message">Нет зарегистрированных франчайзи</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

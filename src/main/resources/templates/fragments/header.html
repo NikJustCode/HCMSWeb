@@ -1,0 +1,25 @@
+<header class="site-header" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="header">
+    <div class="site-header__container">
+        <a href="/" class="site-header__logo">History Coffee</a>
+        <nav class="site-navigation">
+            <a href="/" class="site-navigation__link">Главная</a>
+            <a href="/contacts" class="site-navigation__link">Контакты</a>
+        </nav>
+        <div class="user-actions">
+            <div sec:authorize="isAnonymous()" class="auth-buttons-group">
+                <a th:href="@{/login}" class="button button--secondary button--small">Вход</a>
+                <a th:href="@{/registration}" class="button button--accent button--small">Регистрация</a>
+            </div>
+            <div sec:authorize="isAuthenticated()" class="user-controls-group">
+                <a sec:authorize="hasAuthority('OWNER')" th:href="@{/admin/dashboard}"
+                    class="button button--primary button--small">Кабинет Владельца</a>
+                <a sec:authorize="hasAuthority('FRANCHISEE')" th:href="@{/franchisee/dashboard}"
+                    class="button button--primary button--small">Личный Кабинет</a>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button class="button button--secondary button--small">Выход</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>

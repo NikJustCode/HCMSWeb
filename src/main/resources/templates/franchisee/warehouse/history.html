@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('История операций')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('История операций', '/franchisee/warehouse')}"></header>
+
+    <main class="page-content">
+        <section class="warehouse-history-section content-card">
+            <h1 class="section-title">История операций</h1>
+
+            <table class="admin-table warehouse-history-table">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Тип операции</th>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                        <th>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="move : ${movements}">
+                        <td th:text="${#temporals.format(move.operationDate, 'dd-MM-yyyy HH:mm')}">Date</td>
+                        <td>
+                            <span
+                                th:class="'status-badge ' +
+                            (${move.type.name().contains('INCOME') || move.type.name() == 'INCOMING_ORDER'} ? 'status-badge--delivered' : 'status-badge--new')"
+                                th:text="${move.type.displayName}">Type</span>
+                        </td>
+                        <td th:text="${move.product.name}">Product</td>
+                        <td th:text="${move.amount}">10</td>
+                        <td th:text="${move.description}">Description</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

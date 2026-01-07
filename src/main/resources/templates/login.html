@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Вход')}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="page-content">
+        <section class="auth-page content-card">
+            <h2 class="section-title auth-title">Вход в систему</h2>
+
+            <div th:if="${param.error}" class="alert-message alert-message--error notification--centered">
+                Неверный email или пароль
+            </div>
+            <div th:if="${param.logout}" class="alert-message alert-message--success notification--centered">
+                Вы успешно вышли из системы
+            </div>
+
+            <form th:action="@{/login}" method="post" class="auth-form">
+                <div class="form-field">
+                    <label for="username" class="form-field__label">Email</label>
+                    <input type="email" id="username" name="username" class="form-field__input" required autofocus>
+                </div>
+
+                <div class="form-field">
+                    <label for="password" class="form-field__label">Пароль</label>
+                    <input type="password" id="password" name="password" class="form-field__input" required>
+                </div>
+
+                <button type="submit"
+                    class="button button--primary button--full-width auth-submit-button">Войти</button>
+            </form>
+
+            <p class="auth-footer">
+                Нет аккаунта? <a th:href="@{/registration}" class="auth-link">Зарегистрироваться</a>
+            </p>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

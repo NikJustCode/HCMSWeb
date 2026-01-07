@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Регистрация')}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="page-content">
+        <section class="auth-page content-card form-section">
+            <h2 class="section-title auth-title">Регистрация партнера</h2>
+
+            <form th:action="@{/registration}" th:object="${registrationDTO}" method="post" class="auth-form">
+                <div class="form-field">
+                    <label class="form-field__label">Email</label>
+                    <input type="email" th:field="*{email}" class="form-field__input" placeholder="example@mail.ru">
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                        class="alert-message alert-message--error form-field-error">Error</div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-field__label">Пароль</label>
+                    <input type="password" th:field="*{password}" class="form-field__input">
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                        class="alert-message alert-message--error form-field-error">Error
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-field__label">Подтверждение пароля</label>
+                    <input type="password" th:field="*{confirmPassword}" class="form-field__input">
+                    <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"
+                        class="alert-message alert-message--error form-field-error">Error</div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-field__label">ФИО</label>
+                    <input type="text" th:field="*{fullName}" class="form-field__input"
+                        placeholder="Иванов Иван Иванович">
+                    <div th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"
+                        class="alert-message alert-message--error form-field-error">Error
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-field__label">Телефон</label>
+                    <input type="tel" th:field="*{phoneNumber}" class="form-field__input"
+                        placeholder="+7 (999) 999-99-99">
+                    <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"
+                        class="alert-message alert-message--error form-field-error">
+                        Error</div>
+                </div>
+
+                <button type="submit"
+                    class="button button--primary button--full-width button--large auth-submit-button">Зарегистрироваться</button>
+            </form>
+
+            <p class="auth-footer">
+                Уже есть аккаунт? <a th:href="@{/login}" class="auth-link">Войти</a>
+            </p>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

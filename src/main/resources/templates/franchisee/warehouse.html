@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Мой Склад')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Склад', '/franchisee/dashboard')}"></header>
+
+    <main class="page-content">
+        <section class="franchisee-warehouse-section content-card">
+            <div class="page-header-actions">
+                <h1 class="section-title">Склад</h1>
+                <div class="warehouse-actions-group">
+                    <a href="/franchisee/warehouse/income" class="button button--success warehouse-action-income">Внести
+                        приход</a>
+                    <a href="/franchisee/warehouse/outcome"
+                        class="button button--danger warehouse-action-outcome">Списать</a>
+                    <a href="/franchisee/warehouse/history" class="button button--info warehouse-action-history">История
+                        операций</a>
+                </div>
+            </div>
+
+            <table class="admin-table warehouse-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                        <th>Ед. изм.</th>
+                        <th>Цена закупки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.product.name}">Кофе</td>
+                        <td th:text="${item.quantity}">10</td>
+                        <td th:text="${item.product.unit}">кг</td>
+                        <td th:text="${item.product.price}">1000</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(items)}">
+                        <td colspan="4" class="table-empty-message">Склад пуст</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

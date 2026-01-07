@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!-- Подключаем Security -->
+<head>
+  <title>Vending Supply</title>
+  <style>
+    .product-card { border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px; display: inline-block; vertical-align: top; }
+    .product-img { max-width: 100%; height: 150px; object-fit: cover; }
+    .price { font-weight: bold; color: green; }
+    .navbar { margin-bottom: 20px; padding: 10px; background: #f8f9fa; }
+  </style>
+</head>
+<body>
+
+<!-- Верхнее меню -->
+<div class="navbar">
+  <span>Vending Supply Shop</span>
+  <span style="float: right;">
+            <!-- Эта кнопка видна ТОЛЬКО если у юзера роль ADMIN -->
+            <a sec:authorize="hasRole('ADMIN')" href="/admin/product/new" style="color: red; margin-right: 15px;">+ Добавить товар</a>
+
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit">Выйти</button>
+            </form>
+        </span>
+</div>
+
+<h1>Каталог товаров</h1>
+
+<!-- Если товаров нет -->
+<div th:if="${products.empty}">
+  <p>Товаров пока нет.</p>
+</div>
+
+<!-- Список товаров -->
+<div th:each="product : ${products}" class="product-card">
+  <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" class="product-img">
+  <h3 th:text="${product.title}">Название</h3>
+  <p th:text="${product.description}">Описание</p>
+  <p class="price" th:text="${product.price} + ' ₽'">0.00 ₽</p>
+  <button>В корзину</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Кабинет Партнера')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-dashboard-header :: header('Кабинет Партнера')}"></header>
+
+    <main class="page-content">
+        <section class="dashboard-overview">
+            <div class="dashboard-widgets-grid">
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Статистика</h3>
+                    <p class="dashboard-widget__desc">Подробные отчеты и графики.</p>
+                    <a href="/franchisee/statistics" class="button button--accent button--full-width">Перейти к
+                        статистике</a>
+                </article>
+
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Автоматы</h3>
+                    <p class="dashboard-widget__desc">Управление вашими торговыми автоматами.</p>
+                    <a href="/franchisee/machines" class="button button--primary button--full-width">Мои автоматы</a>
+                </article>
+
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Склад</h3>
+                    <p class="dashboard-widget__desc">Учет остатков и движения товаров.</p>
+                    <a href="/franchisee/warehouse" class="button button--info button--full-width">Мой склад</a>
+                </article>
+
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Заказы</h3>
+                    <p class="dashboard-widget__desc">Оформление и история заказов.</p>
+                    <a href="/franchisee/orders" class="button button--success button--full-width">Мои заказы</a>
+                </article>
+
+                <article class="content-card dashboard-widget">
+                    <h3 class="dashboard-widget__title">Персонал</h3>
+                    <p class="dashboard-widget__desc">Управление сотрудниками.</p>
+                    <a href="/franchisee/employees" class="button button--warning button--full-width">Управление
+                        персоналом</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

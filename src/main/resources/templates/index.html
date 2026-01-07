@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Главная')}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="page-content">
+        <section class="hero-section">
+            <h1 class="hero-section__title">Добро пожаловать в History Coffee</h1>
+            <p class="hero-section__subtitle">Искусство создания идеального кофе и успешного бизнеса</p>
+
+            <div class="hero-section__actions">
+                <div sec:authorize="!isAuthenticated()" class="guest-actions-group">
+                    <a href="/login" class="button button--primary button--large">Начать работу</a>
+                    <a href="/contacts" class="button button--secondary button--large button--white-ghost">Стать
+                        партнером</a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" class="user-actions-group">
+                    <a sec:authorize="hasAuthority('OWNER')" href="/admin/dashboard"
+                        class="button button--primary button--large">
+                        Перейти в панель
+                    </a>
+                    <a sec:authorize="hasAuthority('FRANCHISEE')" href="/franchisee/dashboard"
+                        class="button button--primary button--large">
+                        Перейти в кабинет
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="advantages-section">
+            <article class="content-card advantage-card">
+                <h3 class="advantage-card__title">Премиальное качество</h3>
+                <p>Мы используем только современное оборудование для приготовления
+                    кофе, лучшие ингридиенты, обеспечивая неизменный вкус в каждой чашке.</p>
+            </article>
+            <article class="content-card advantage-card">
+                <h3 class="advantage-card__title">Готовое решение</h3>
+                <p>Полная поддержка франчайзи: от подбора локации до поставки ингредиентов и обучения. Мы ведем вас за
+                    руку к успеху.</p>
+            </article>
+            <article class="content-card advantage-card">
+                <h3 class="advantage-card__title">IT-Технологии</h3>
+                <p>Наша собственная CRM-система позволяет управлять складом, сотрудниками и аппаратами, остлеживать
+                    статистику расходов.</p>
+            </article>
+        </section>
+
+        <section class="company-stats">
+            <div class="content-card stat-item">
+                <div class="stat-item__value">100+</div>
+                <p>Кофейных автоматов по стране</p>
+            </div>
+            <div class="content-card stat-item">
+                <div class="stat-item__value">3 000₽+</div>
+                <p>Средняя ежедневная прибыль партнера в день с 1 автомата</p>
+            </div>
+            <div class="content-card stat-item">
+                <div class="stat-item__value">4.9</div>
+                <p>Средний рейтинг в 2GIS</p>
+            </div>
+        </section>
+
+        <section class="partnership-cta">
+            <h2>Присоединяйтесь к нашей сети</h2>
+            <p>Начните свой успешный бизнес вместе с History Coffee уже сегодня.</p>
+            <a href="/contacts" class="button button--accent button--large">Оставить заявку на франшизу</a>
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>
