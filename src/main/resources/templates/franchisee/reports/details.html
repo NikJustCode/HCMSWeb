@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Детали отчета')}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('Связанные отчеты', '/franchisee/reports')}"></header>
+
+    <main class="page-content">
+        <section class="content-card">
+            <div class="page-header-actions" style="margin-bottom: 1.5rem;">
+                <h1 class="section-title" style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    Отчет об обслуживании 
+                    <span class="badge bg-secondary" th:text="'#' + ${report.id}"></span>
+                </h1>
+                <a th:href="@{/franchisee/reports}" class="button button--secondary">← К списку</a>
+            </div>
+            
+            <div class="dashboard-widgets-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <!-- Карточка автомата -->
+                <article class="content-card dashboard-widget" style="margin: 0; padding: 1.25rem;">
+                    <h3 class="dashboard-widget__title" style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>☕</span> Информация об объекте
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <p class="dashboard-widget__desc" style="margin: 0;"><strong>Автомат:</strong> <span th:text="${report.machine.name}"></span></p>
+                        <p class="dashboard-widget__desc" style="margin: 0;"><strong>Адрес:</strong> <span th:text="${report.machine.addressText}"></span></p>
+                        <p class="dashboard-widget__desc" style="margin: 0;"><strong>Дата визита:</strong> <span th:text="${#temporals.format(report.serviceDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+                    </div>
+                </article>
+
+                <!-- Карточка сотрудника -->
+                <article class="content-card dashboard-widget" style="margin: 0; padding: 1.25rem;">
+                    <h3 class="dashboard-widget__title" style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>👤</span> Сотрудник
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <p class="dashboard-widget__desc" style="margin: 0;"><strong>ФИО:</strong> <span th:text="${report.employee.fullName}"></span></p>
+                        <p class="dashboard-widget__desc" style="margin: 0;" th:if="${report.employee.phone}"><strong>Телефон:</strong> <span th:text="${report.employee.phone}"></span></p>
+                        <p class="dashboard-widget__desc" style="margin: 0;" th:if="${report.employee.email}"><strong>Email:</strong> <span th:text="${report.employee.email}"></span></p>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Comment Section -->
+            <div class="form-section mb-4" style="margin-bottom: 2rem;">
+                <h2 class="form-section__title">Комментарий специалиста</h2>
+                <div style="background-color: #f8fafc; border-left: 4px solid var(--color-primary); border-radius: 6px; padding: 1rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                    <p style="color: #334155; font-size: 1.1rem; font-style: italic; white-space: pre-wrap; margin: 0; line-height: 1.5;" 
+                       th:text="${#strings.isEmpty(report.comment) ? 'Сотрудник не оставил комментарий' : report.comment}"></p>
+                </div>
+            </div>
+
+            <!-- Consumables Section -->
+            <div class="form-section mb-4" th:if="${not #lists.isEmpty(report.consumables)}" style="margin-bottom: 2rem;">
+                <h2 class="form-section__title">Потраченные расходники</h2>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Наименование товара</th>
+                                <th style="width: 150px; text-align: center;">Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cons : ${report.consumables}">
+                                <td>
+                                    <div class="employee-name-cell">
+                                        <span class="contact-icon">📦</span>
+                                        <span class="cell-bold" th:text="${cons.product.name}"></span>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="badge bg-primary" th:text="${cons.quantity} + ' шт.'"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Photos Section -->
+            <div class="form-section" th:if="${not #lists.isEmpty(report.photos)}">
+                <h2 class="form-section__title">Фотографии с текущего обслуживания</h2>
+                
+                <style>
+                    .gallery-wrapper {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                        gap: 1.5rem;
+                        margin-top: 1rem;
+                    }
+                    .gallery-item {
+                        display: block;
+                        overflow: hidden;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        aspect-ratio: 1/1;
+                        background-color: #f1f5f9;
+                    }
+                    .gallery-item:hover {
+                        transform: translateY(-4px);
+                        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+                    }
+                    .gallery-photo {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
+                    }
+                </style>
+
+                <div class="gallery-wrapper">
+                    <a th:each="photo : ${report.photos}" th:href="@{${photo.photoUrl}}" target="_blank" class="gallery-item">
+                        <img th:src="@{${photo.photoUrl}}" alt="Фото отчета" class="gallery-photo" />
+                    </a>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

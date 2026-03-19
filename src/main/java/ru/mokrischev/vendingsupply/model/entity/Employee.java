@@ -29,6 +29,9 @@ public class Employee {
 
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "schedule_type")
     private ScheduleType scheduleType;

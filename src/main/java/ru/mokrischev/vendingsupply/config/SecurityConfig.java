@@ -22,11 +22,16 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final ru.mokrischev.vendingsupply.security.JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/mobile/**"));
+
         http
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/api/mobile/v1/login").permitAll()
+                        .requestMatchers("/api/mobile/**").hasAuthority("ROLE_MOBILE_EMPLOYEE")
                         .requestMatchers("/", "/index", "/registration", "/login", "/css/**", "/js/**", "/images/**",
                                 "/uploads/**",
                                 "/api/feedback", "/contacts", "/feedback")
@@ -43,6 +48,8 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll());
+
+        http.addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

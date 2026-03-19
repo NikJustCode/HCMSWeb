@@ -41,7 +41,19 @@ public class FranchiseeEmployeeController {
     public String save(@Valid @ModelAttribute Employee employee,
             BindingResult bindingResult,
             @RequestParam(required = false) List<Long> machineIds,
+            @RequestParam(required = false) String newPassword,
+            @RequestParam(required = false) String confirmPassword,
             Principal principal, Model model) {
+
+        if (newPassword != null && !newPassword.trim().isEmpty()) {
+            if (!newPassword.equals(confirmPassword)) {
+                bindingResult.rejectValue("password", "error.employee", "Пароли не совпадают");
+            } else {
+                employee.setPassword(newPassword);
+            }
+        } else if (employee.getId() == null) {
+            bindingResult.rejectValue("password", "error.employee", "Пароль обязателен для нового сотрудника");
+        }
 
         if (bindingResult.hasErrors()) {
             addCommonAttributes(model, principal);
@@ -75,6 +87,7 @@ public class FranchiseeEmployeeController {
         if (employee == null) {
             return "redirect:/franchisee/employees";
         }
+        employee.setPassword(null); // Do not send hash to the view
         model.addAttribute("employee", employee);
         addCommonAttributes(model, principal);
         return "franchisee/employees/form";

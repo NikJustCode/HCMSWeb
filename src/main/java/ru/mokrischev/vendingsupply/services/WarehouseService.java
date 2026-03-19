@@ -107,6 +107,13 @@ public class WarehouseService {
                 machine);
     }
 
+    @Transactional
+    public void registerServiceReport(String email, Map<Long, Integer> quantities,
+            ru.mokrischev.vendingsupply.model.entity.VendingMachine machine, Long reportId) {
+        processBatch(email, quantities, OperationType.MACHINE_SERVICE, "Отчет обслуживания № " + reportId, -1,
+                machine);
+    }
+
     // Deprecated but kept for OrderService compatibility (will update OrderService
     // next)
     @Transactional

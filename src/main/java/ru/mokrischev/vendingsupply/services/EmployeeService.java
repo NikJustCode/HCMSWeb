@@ -3,6 +3,7 @@ package ru.mokrischev.vendingsupply.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.mokrischev.vendingsupply.model.entity.Employee;
 import ru.mokrischev.vendingsupply.model.entity.User;
 import ru.mokrischev.vendingsupply.model.entity.VendingMachine;
@@ -19,6 +20,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final UserRepository userRepository;
     private final VendingMachineRepository vendingMachineRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<Employee> findByFranchisee(String email) {
         return employeeRepository.findByFranchiseeEmail(email); // Assuming this method exists or needs creation
@@ -42,6 +44,16 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + franchiseeEmail));
 
         employee.setFranchisee(franchisee);
+
+        if (employee.getPassword() != null && !employee.getPassword().isEmpty()) {
+            employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        } else if (employee.getId() != null) {
+            // Keep old password if it's an update and field is empty
+            Employee existing = employeeRepository.findById(employee.getId()).orElse(null);
+            if (existing != null) {
+                employee.setPassword(existing.getPassword());
+            }
+        }
 
         if (machineIds != null) {
             List<VendingMachine> machines = vendingMachineRepository.findAllById(machineIds);

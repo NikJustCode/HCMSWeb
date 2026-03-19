@@ -26,14 +26,12 @@
                 <tbody>
                     <tr th:each="machine : ${machines}">
                         <td>
-                            <a th:href="@{/franchisee/machines/{id}(id=${machine.id})}" th:text="${machine.name}"
+                            <a th:href="@{/franchisee/reports(machineId=${machine.id})}" th:text="${machine.name}"
                                 class="link-highlight machine-link">Автомат 1</a>
                         </td>
                         <td th:text="${machine.addressText}">Ул. Ленина, 1</td>
                         <td>
                             <div class="table-actions-group">
-                                <a th:href="@{/franchisee/machines/{id}/service(id=${machine.id})}"
-                                    class="button button--small button--info machine-service-button">Обслужить</a>
                                 <a th:href="@{/franchisee/machines/edit/{id}(id=${machine.id})}"
                                     class="button button--small button--warning machine-edit-button">Редактировать</a>
                                 <form th:action="@{/franchisee/machines/delete/{id}(id=${machine.id})}" method="post"
