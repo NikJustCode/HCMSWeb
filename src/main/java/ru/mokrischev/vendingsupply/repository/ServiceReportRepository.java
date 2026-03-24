@@ -10,4 +10,9 @@ import java.util.List;
 public interface ServiceReportRepository extends JpaRepository<ServiceReport, Long> {
     List<ServiceReport> findByEmployeeFranchiseeEmailOrderByServiceDateDesc(String email);
     List<ServiceReport> findByEmployeeFranchiseeEmailAndMachineIdOrderByServiceDateDesc(String email, Long machineId);
+    
+    // For mobile API
+    List<ServiceReport> findByEmployeeIdOrderByServiceDateDesc(Long employeeId);
+    List<ServiceReport> findByEmployeeIdAndMachineIdOrderByServiceDateDesc(Long employeeId, Long machineId);
+    ServiceReport findTopByMachineIdOrderByServiceDateDesc(Long machineId);
 }
