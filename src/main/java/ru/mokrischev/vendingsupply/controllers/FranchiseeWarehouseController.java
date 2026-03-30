@@ -21,6 +21,7 @@ public class FranchiseeWarehouseController {
 
     private final WarehouseService warehouseService;
     private final ProductService productService;
+    private final ru.mokrischev.vendingsupply.repository.VendingMachineRepository vendingMachineRepository;
 
     @GetMapping
     public String viewWarehouse(Principal principal, Model model) {
@@ -29,8 +30,38 @@ public class FranchiseeWarehouseController {
     }
 
     @GetMapping("/history")
-    public String viewHistory(Principal principal, Model model) {
-        model.addAttribute("movements", warehouseService.getHistory(principal.getName()));
+    public String viewHistory(
+            Principal principal,
+            @RequestParam(required = false) Long machineId,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate date,
+            @RequestParam(required = false) String type,
+            Model model) {
+        
+        java.util.List<ru.mokrischev.vendingsupply.model.entity.StockMovement> movements = warehouseService.getHistory(principal.getName());
+        
+        if (machineId != null) {
+            movements = movements.stream()
+                .filter(m -> m.getVendingMachine() != null && m.getVendingMachine().getId().equals(machineId))
+                .collect(Collectors.toList());
+        }
+        if (date != null) {
+            movements = movements.stream()
+                .filter(m -> m.getOperationDate().toLocalDate().equals(date))
+                .collect(Collectors.toList());
+        }
+        if (type != null && !type.isEmpty()) {
+            movements = movements.stream()
+                .filter(m -> m.getType().name().equals(type))
+                .collect(Collectors.toList());
+        }
+
+        model.addAttribute("movements", movements);
+        model.addAttribute("machines", vendingMachineRepository.findByFranchiseeEmail(principal.getName()));
+        model.addAttribute("operations", ru.mokrischev.vendingsupply.model.enums.OperationType.values());
+        model.addAttribute("selectedMachineId", machineId);
+        model.addAttribute("selectedDate", date);
+        model.addAttribute("selectedType", type);
+        
         return "franchisee/warehouse/history";
     }
 

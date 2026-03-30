@@ -61,8 +61,12 @@ public class WarehouseService {
         // Check stock for outcome
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             if (item.getQuantity().add(amount).compareTo(BigDecimal.ZERO) < 0) {
-                throw new ru.mokrischev.vendingsupply.exceptions.InsufficientStockException(
-                        "Недостаточно товара " + product.getName());
+                if (type == OperationType.MACHINE_SERVICE) {
+                    description = description + " (Ошибка: возник отрицательный остаток)";
+                } else {
+                    throw new ru.mokrischev.vendingsupply.exceptions.InsufficientStockException(
+                            "Недостаточно товара " + product.getName());
+                }
             }
         }
 

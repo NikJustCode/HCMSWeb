@@ -11,6 +11,37 @@
         <section class="warehouse-history-section content-card">
             <h1 class="section-title">История операций</h1>
 
+            <form method="get" action="/franchisee/warehouse/history" class="filter-form" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: end;">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label for="date" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Дата</label>
+                    <input type="date" id="date" name="date" class="form-control" th:value="${selectedDate}">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label for="machineId" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Автомат</label>
+                    <select id="machineId" name="machineId" class="form-control">
+                        <option value="">Все автоматы</option>
+                        <option th:each="m : ${machines}" 
+                                th:value="${m.id}" 
+                                th:text="${m.name + ' (' + m.addressText + ')'}"
+                                th:selected="${m.id == selectedMachineId}"></option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label for="type" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Тип операции</label>
+                    <select id="type" name="type" class="form-control">
+                        <option value="">Все операции</option>
+                        <option th:each="op : ${operations}" 
+                                th:value="${op.name()}" 
+                                th:text="${op.displayName}"
+                                th:selected="${op.name() == selectedType}"></option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 0.5rem; height: 48px;">
+                    <button type="submit" class="btn btn-primary" style="height: 100%;">Применить</button>
+                    <a href="/franchisee/warehouse/history" class="btn btn-outline" style="height: 100%; display: flex; align-items: center; padding: 0 1rem; text-decoration: none;">Сбросить</a>
+                </div>
+            </form>
+
             <table class="admin-table warehouse-history-table">
                 <thead>
                     <tr>
@@ -22,7 +53,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="move : ${movements}">
+                    <tr th:each="move : ${movements}" th:style="${move.description != null and move.description.contains('(Ошибка')} ? 'background-color: rgba(255, 68, 68, 0.15); color: #d32f2f;' : ''">
                         <td th:text="${#temporals.format(move.operationDate, 'dd-MM-yyyy HH:mm')}">Date</td>
                         <td>
                             <span
