@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # Настройка твоего приложения
+  # Настройка приложения
   app:
     build: .
     container_name: vending_app_container
