@@ -16,6 +16,7 @@ public class FranchiseeMachineController {
 
     private final VendingMachineService vendingMachineService;
     private final ru.mokrischev.vendingsupply.services.WarehouseService warehouseService;
+    private final ru.mokrischev.vendingsupply.repository.MachineReviewRepository machineReviewRepository;
 
     @GetMapping
     public String list(Model model, Principal principal) {
@@ -65,6 +66,38 @@ public class FranchiseeMachineController {
         model.addAttribute("machine", machine);
         model.addAttribute("history", warehouseService.getMachineHistory(id));
         return "franchisee/machines/details";
+    }
+
+    @GetMapping("/{id}/reviews")
+    public String machineReviews(@PathVariable Long id, Model model, Principal principal) {
+        VendingMachine machine = vendingMachineService.findByIdAndFranchisee(id, principal.getName());
+        if (machine == null) {
+            return "redirect:/franchisee/machines";
+        }
+        model.addAttribute("machine", machine);
+        model.addAttribute("reviews", machineReviewRepository.findByMachineIdOrderByCreatedAtDesc(id));
+        return "franchisee/machines/reviews";
+    }
+
+    @GetMapping("/{id}/qr")
+    public String machineQrCode(@PathVariable Long id, Model model, Principal principal, jakarta.servlet.http.HttpServletRequest request) {
+        VendingMachine machine = vendingMachineService.findByIdAndFranchisee(id, principal.getName());
+        if (machine == null) {
+            return "redirect:/franchisee/machines";
+        }
+        
+        String baseUrl = org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .build()
+                .toUriString();
+                
+        String publicUrl = baseUrl + "/public/reviews/machine/" + id;
+        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + publicUrl;
+        
+        model.addAttribute("machine", machine);
+        model.addAttribute("qrUrl", qrUrl);
+        model.addAttribute("publicUrl", publicUrl);
+        return "franchisee/machines/qr";
     }
 
     @GetMapping("/{id}/service")

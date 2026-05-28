@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/mobile/**"));
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/mobile/**", "/public/**"));
 
         http
                 .authorizeHttpRequests((requests) -> requests
@@ -34,14 +34,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/mobile/**").hasAuthority("ROLE_MOBILE_EMPLOYEE")
                         .requestMatchers("/", "/index", "/registration", "/login", "/css/**", "/js/**", "/images/**",
                                 "/uploads/**",
-                                "/api/feedback", "/contacts", "/feedback")
+                                "/api/feedback", "/contacts", "/feedback", "/public/**")
                         .permitAll()
                         .requestMatchers("/admin/**").hasAuthority(Role.OWNER.name())
                         .requestMatchers("/franchisee/**").hasAuthority(Role.FRANCHISEE.name())
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .usernameParameter("username") // Changed from email to username
+                        .usernameParameter("username")
                         .successHandler(authenticationSuccessHandler)
                         .permitAll())
                 .logout((logout) -> logout

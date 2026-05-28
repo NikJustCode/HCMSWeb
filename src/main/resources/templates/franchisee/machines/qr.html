@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('QR Код Автомата')}"></head>
+<body>
+    <header th:replace="~{fragments/cabinet-header :: header('QR Код', '/franchisee/machines')}"></header>
+
+    <main class="page-content">
+        <section class="content-card qr-section" style="text-align: center; padding: 40px;">
+            <h2 class="section-title">QR-код для отзывов: <span th:text="${machine.name}"></span></h2>
+            <p>Распечатайте этот QR-код и наклейте на автомат, чтобы клиенты могли оставлять отзывы.</p>
+            
+            <div style="margin: 30px 0;">
+                <img th:src="${qrUrl}" alt="QR Code" style="border: 2px solid #ddd; border-radius: 10px; padding: 10px; background: white;" />
+            </div>
+            
+            <p><strong>Ссылка:</strong> <a th:href="${publicUrl}" target="_blank" th:text="${publicUrl}"></a></p>
+            
+            <div style="margin-top: 30px;">
+                <a href="/franchisee/machines" class="button button--secondary">Назад к списку</a>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

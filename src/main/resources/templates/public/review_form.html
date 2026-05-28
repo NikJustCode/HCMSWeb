@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оставить отзыв</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .review-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 500px; }
+        .title { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+        .machine-name { color: #3498db; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+        .form-input:focus { outline: none; border-color: #3498db; box-shadow: 0 0 0 3px rgba(52,152,219,0.2); }
+        .btn-submit { width: 100%; padding: 14px; background: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        .btn-submit:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+    <div class="review-card">
+        <h2 class="title">Отзыв об автомате <br/><span class="machine-name" th:text="${machine.name}"></span></h2>
+        
+        <form th:action="@{/public/reviews/machine/{id}(id=${machine.id})}" th:object="${review}" method="post">
+            <div class="form-group">
+                <label class="form-label" for="customerName">Ваше имя</label>
+                <input type="text" id="customerName" th:field="*{customerName}" class="form-input" required placeholder="Введите ваше имя">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="contactNumber">Номер телефона для связи</label>
+                <input type="tel" id="contactNumber" th:field="*{contactNumber}" class="form-input" required placeholder="+7 (999) 000-00-00">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="reviewText">Ваш отзыв</label>
+                <textarea id="reviewText" th:field="*{reviewText}" class="form-input" required rows="5" placeholder="Напишите, что вам понравилось или что можно улучшить..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn-submit">Отправить отзыв</button>
+        </form>
+    </div>
+</body>
+</html>

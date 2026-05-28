@@ -34,6 +34,10 @@
                             <div class="table-actions-group">
                                 <a th:href="@{/franchisee/machines/edit/{id}(id=${machine.id})}"
                                     class="button button--small button--warning machine-edit-button">Редактировать</a>
+                                <a th:href="@{/franchisee/machines/{id}/reviews(id=${machine.id})}"
+                                    class="button button--small button--info">Отзывы</a>
+                                <a th:href="@{/franchisee/machines/{id}/qr(id=${machine.id})}"
+                                    class="button button--small button--secondary">Генерация QR-кода</a>
                                 <form th:action="@{/franchisee/machines/delete/{id}(id=${machine.id})}" method="post"
                                     class="inline-form">
                                     <button type="submit"
