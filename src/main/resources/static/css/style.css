@@ -1257,8 +1257,7 @@ textarea.form-field__input {
 }
 
 .chart-card {
-    max-height: 450px;
-    overflow: hidden;
+    max-height: none;
 }
 
 .chart-card-title {

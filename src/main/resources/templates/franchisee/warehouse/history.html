@@ -11,14 +11,14 @@
         <section class="warehouse-history-section content-card">
             <h1 class="section-title">История операций</h1>
 
-            <form method="get" action="/franchisee/warehouse/history" class="filter-form" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: end;">
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <label for="date" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Дата</label>
-                    <input type="date" id="date" name="date" class="form-control" th:value="${selectedDate}">
+            <form method="get" action="/franchisee/warehouse/history" class="statistics-chart-filter-form" style="margin-bottom: 2rem;">
+                <div class="form-field statistics-filter-group" style="min-width: 150px; margin-bottom: 0;">
+                    <label for="date" class="form-field__label">Дата</label>
+                    <input type="date" id="date" name="date" class="form-field__input" th:value="${selectedDate}">
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <label for="machineId" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Автомат</label>
-                    <select id="machineId" name="machineId" class="form-control">
+                <div class="form-field statistics-filter-group" style="min-width: 250px; margin-bottom: 0;">
+                    <label for="machineId" class="form-field__label">Автомат</label>
+                    <select id="machineId" name="machineId" class="form-field__input">
                         <option value="">Все автоматы</option>
                         <option th:each="m : ${machines}" 
                                 th:value="${m.id}" 
@@ -26,9 +26,9 @@
                                 th:selected="${m.id == selectedMachineId}"></option>
                     </select>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <label for="type" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);">Тип операции</label>
-                    <select id="type" name="type" class="form-control">
+                <div class="form-field statistics-filter-group" style="min-width: 200px; margin-bottom: 0;">
+                    <label for="type" class="form-field__label">Тип операции</label>
+                    <select id="type" name="type" class="form-field__input">
                         <option value="">Все операции</option>
                         <option th:each="op : ${operations}" 
                                 th:value="${op.name()}" 
@@ -36,9 +36,9 @@
                                 th:selected="${op.name() == selectedType}"></option>
                     </select>
                 </div>
-                <div style="display: flex; gap: 0.5rem; height: 48px;">
-                    <button type="submit" class="btn btn-primary" style="height: 100%;">Применить</button>
-                    <a href="/franchisee/warehouse/history" class="btn btn-outline" style="height: 100%; display: flex; align-items: center; padding: 0 1rem; text-decoration: none;">Сбросить</a>
+                <div class="form-field" style="display: flex; gap: 10px; margin-bottom: 0; align-items: center; min-height: 46px;">
+                    <button type="submit" class="button button--primary" style="height: 46px;">Применить</button>
+                    <a href="/franchisee/warehouse/history" class="button button--secondary" style="height: 46px; display: flex; align-items: center;">Сбросить</a>
                 </div>
             </form>
 
