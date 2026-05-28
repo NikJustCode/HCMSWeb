@@ -14,6 +14,15 @@
                 <a href="/admin/dashboard" class="button button--secondary">Назад</a>
             </div>
 
+            <div class="reports-actions card" style="margin-bottom: 20px; padding: 15px; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <form id="reportForm" method="get" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                    <label for="reportMonth" style="font-weight: 600;">Месяц для отчета:</label>
+                    <input type="month" name="month" id="reportMonth" required style="padding:8px; border-radius:4px; border:1px solid #ccc;" th:value="${currentMonth}">
+                    <button type="submit" formaction="/admin/reports/excel" class="button button--primary" style="background: #217346; color: white; border: none;">Сделать подробный Excel отчёт</button>
+                    <button type="submit" formaction="/admin/reports/pdf" class="button button--primary" style="background: #e2574c; color: white; border: none;">Сделать общий pdf отчёт</button>
+                </form>
+            </div>
+
             <div class="statistics-charts-grid">
                 <div class="info-card chart-card chart-card--revenue">
                     <h3 class="chart-card-title">Выручка по месяцам</h3>

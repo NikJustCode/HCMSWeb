@@ -18,6 +18,7 @@ public class AdminStatisticsController {
     public String showStatistics(Model model) {
         model.addAttribute("monthlyRevenue", orderService.getMonthlyRevenue());
         model.addAttribute("topProducts", orderService.getTopProducts());
+        model.addAttribute("currentMonth", java.time.YearMonth.now().toString());
         return "admin/statistics";
     }
 }

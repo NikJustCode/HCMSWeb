@@ -90,6 +90,7 @@ public class FranchiseeStatisticsController {
                     LocalDateTime.now());
         }
         model.addAttribute("expenses", expenses);
+        model.addAttribute("currentMonth", java.time.YearMonth.now().toString());
 
         return "franchisee/statistics";
     }
